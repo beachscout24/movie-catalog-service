@@ -1,10 +1,10 @@
 ----------------------------------------------------------------
-Tue May 19 12:02:52 EDT 2020:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0172-2dac-6492-00000fc80248 
-on database directory memory:C:\dev\spring\movie-catalog-service\112fcbf7-531e-4ee5-8c1b-3165bdc86ab4 with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@3b764bce 
+Tue May 19 14:18:59 EDT 2020:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0172-2e29-0347-00001cf8a158 
+on database directory memory:C:\dev\spring\movie-catalog-service\c7182a7e-d625-4090-882b-3ae0184e3ff6 with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@77556fd 
 Loaded from file:/C:/Users/ericw/.gradle/caches/modules-2/files-2.1/org.apache.derby/derby/10.14.2.0/7efad40ef52fbb1f08142f07a83b42d29e47d8ce/derby-10.14.2.0.jar
-java.vendor=Oracle Corporation
-java.runtime.version=9.0.4+11
+java.vendor=JetBrains s.r.o
+java.runtime.version=11.0.6+8-b765.40
 user.dir=C:\dev\spring\movie-catalog-service
 os.name=Windows 10
 os.arch=amd64

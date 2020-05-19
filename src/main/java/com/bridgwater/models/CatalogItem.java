@@ -1,19 +1,9 @@
 package com.bridgwater.models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import org.springframework.stereotype.Component;
 
-@Entity
+@Component
 public class CatalogItem {
-
-    @Id
-    private int id;
-
-    private String name;
-
-    private String description;
-
-    private int rating;
 
     public CatalogItem(int id, String name, String description, int rating) {
         this.id = id;
@@ -25,6 +15,14 @@ public class CatalogItem {
     public CatalogItem() {
         super();
     }
+
+    private int id;
+
+    private String name;
+
+    private String description;
+
+    private int rating;
 
     public int getId() {
         return id;

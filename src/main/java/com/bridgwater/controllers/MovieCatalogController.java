@@ -20,6 +20,7 @@ import java.util.List;
 @Slf4j
 public class MovieCatalogController {
 
+    @Autowired
     private RestTemplate restTemplate;
     @Autowired
     private CatalogRepository catalogRepository;

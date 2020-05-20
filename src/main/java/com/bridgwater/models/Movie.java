@@ -7,6 +7,7 @@ public class Movie {
     private Integer id;
     private String name;
     private String description;
+    private Integer rating;
 
     public String getDescription() {
         return description;
@@ -18,6 +19,14 @@ public class Movie {
 
     public Movie() {
         super();
+    }
+
+
+    public Movie(String title, String overview, Integer rating) {
+        super();
+        this.name = title;
+        this.description = overview;
+        this.rating = rating;
     }
 
     public Integer getId() {
@@ -34,6 +43,14 @@ public class Movie {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
     }
 
     @Override

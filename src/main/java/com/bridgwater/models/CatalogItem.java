@@ -5,7 +5,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CatalogItem {
 
-    public CatalogItem(String name, String description, int rating) {
+    public CatalogItem(Integer id, String name, String description, int rating) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.rating = rating;

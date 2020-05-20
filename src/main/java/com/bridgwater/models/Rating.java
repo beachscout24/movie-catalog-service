@@ -1,12 +1,22 @@
 package com.bridgwater.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
+
 @Component
-public class Rating {
+public class Rating implements Serializable {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer id;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String movie;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer rating;
+
+    public Rating() {
+        super();
+    }
 
     public Integer getId() {
         return id;

@@ -1,9 +1,13 @@
 package com.bridgwater.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RatingList {
+public class RatingList implements Serializable {
+    @JsonProperty("ratings")
     private List<Rating> ratings;
 
     public RatingList() {

@@ -3,9 +3,11 @@ package com.bridgwater.controllers;
 import com.bridgwater.models.CatalogItem;
 import com.bridgwater.models.Movie;
 import com.bridgwater.models.RatingList;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,18 +19,18 @@ public class MovieCatalogController {
 
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    private Gson gson;
 
     @GetMapping("/catalogs")
-    public @ResponseBody
-    List<CatalogItem> getCatalog() {
+    public List<CatalogItem> getCatalog() throws JsonProcessingException {
         // get all rating by movie id
-        RatingList result = restTemplate.getForObject("http://localhost:8200/ratings/", RatingList.class);
-        System.out.println(result.getRatings());
-        return result.getRatings().stream().map(rating -> {
-            System.out.println("Rating: " + rating);
-            Movie movie = restTemplate.getForObject("http://localhost:8000/movies/" + rating.getMovie(), Movie.class);
-            System.out.println("Movie: " + movie);
-            return new CatalogItem(movie.getName(), movie.getDescription(), rating.getRating());
+        ResponseEntity<String> result = restTemplate.getForEntity("http://ratings-service/ratings/", String.class);
+        RatingList ratings = gson.fromJson(result.getBody(), RatingList.class);
+        return ratings.getRatings().stream().map(rating -> {
+            ResponseEntity<String> response = restTemplate.getForEntity("http://movie-service/movies/" + rating.getMovie(), String.class);
+            Movie movie = gson.fromJson(response.getBody(), Movie.class);
+            return new CatalogItem(movie.getId(), movie.getName(), movie.getDescription(), rating.getRating());
         }).collect(Collectors.toList());
     }
 }

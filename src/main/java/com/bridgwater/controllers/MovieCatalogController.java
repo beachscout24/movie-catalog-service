@@ -3,7 +3,6 @@ package com.bridgwater.controllers;
 import com.bridgwater.models.CatalogItem;
 import com.bridgwater.models.Movie;
 import com.bridgwater.models.RatingList;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,7 @@ public class MovieCatalogController {
     private Gson gson;
 
     @GetMapping("/catalogs")
-    public List<CatalogItem> getCatalog() throws JsonProcessingException {
+    public List<CatalogItem> getCatalog() {
         // get all rating by movie id
         ResponseEntity<String> result = restTemplate.getForEntity("http://ratings-service/ratings/", String.class);
         RatingList ratings = gson.fromJson(result.getBody(), RatingList.class);

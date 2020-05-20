@@ -2,39 +2,33 @@ package com.bridgwater.controllers;
 
 import com.bridgwater.models.CatalogItem;
 import com.bridgwater.models.Movie;
-import com.bridgwater.models.Rating;
-import com.bridgwater.repository.CatalogRepository;
-import lombok.extern.slf4j.Slf4j;
+import com.bridgwater.models.RatingList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/catalogs")
-@Slf4j
 public class MovieCatalogController {
 
     @Autowired
     private RestTemplate restTemplate;
-    @Autowired
-    private CatalogRepository catalogRepository;
 
-    @GetMapping("/{id}")
-    public List<CatalogItem> getCatalog(@PathVariable("id") String userId) {
-        Movie movie = null;
+    @GetMapping("/catalogs")
+    public @ResponseBody
+    List<CatalogItem> getCatalog() {
         // get all rating by movie id
-        Rating rating = restTemplate.getForObject("localhost:8200/ratings/" + userId, Rating.class);
-        // for each movieId call movie service to get details
-        if (rating != null)
-            movie = restTemplate.getForObject("localhost:8000/movies/" + rating.getId(), Movie.class);
-
-        // put all together for return
-        return Collections.singletonList(new CatalogItem(1, "Transformers", "Movie", 4));
+        RatingList result = restTemplate.getForObject("http://localhost:8200/ratings/", RatingList.class);
+        System.out.println(result.getRatings());
+        return result.getRatings().stream().map(rating -> {
+            System.out.println("Rating: " + rating);
+            Movie movie = restTemplate.getForObject("http://localhost:8000/movies/" + rating.getMovie(), Movie.class);
+            System.out.println("Movie: " + movie);
+            return new CatalogItem(movie.getName(), movie.getDescription(), rating.getRating());
+        }).collect(Collectors.toList());
     }
 }

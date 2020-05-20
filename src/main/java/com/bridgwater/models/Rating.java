@@ -4,19 +4,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Rating {
-
-    public Rating() {
-        super();
-    }
-
-    public Rating(Integer id, String movieId, Integer rating) {
-        this.id = id;
-        this.movieId = movieId;
-        this.rating = rating;
-    }
-
     private Integer id;
-    private String movieId;
+    private String movie;
     private Integer rating;
 
     public Integer getId() {
@@ -27,12 +16,12 @@ public class Rating {
         this.id = id;
     }
 
-    public String getMovieId() {
-        return movieId;
+    public String getMovie() {
+        return movie;
     }
 
-    public void setMovieId(String movieId) {
-        this.movieId = movieId;
+    public void setMovie(String movieId) {
+        this.movie = movie;
     }
 
     public Integer getRating() {
@@ -47,7 +36,7 @@ public class Rating {
     public String toString() {
         return "Rating{" +
                 "id=" + id +
-                ", movieId='" + movieId + '\'' +
+                ", movie='" + movie + '\'' +
                 ", rating=" + rating +
                 '}';
     }

@@ -7,6 +7,15 @@ public class Movie {
 
     private Integer movieId;
     private String name;
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Movie() {
         super();
@@ -36,6 +45,7 @@ public class Movie {
         return "Movie{" +
                 "movieId=" + movieId +
                 ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

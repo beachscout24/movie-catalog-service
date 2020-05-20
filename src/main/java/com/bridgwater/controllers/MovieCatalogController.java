@@ -1,5 +1,6 @@
 package com.bridgwater.controllers;
 
+import com.bridgwater.accessor.Accessor;
 import com.bridgwater.models.CatalogItem;
 import com.bridgwater.models.Movie;
 import com.bridgwater.models.RatingList;
@@ -20,14 +21,16 @@ public class MovieCatalogController {
     private RestTemplate restTemplate;
     @Autowired
     private Gson gson;
+    @Autowired
+    Accessor accessor;
 
     @GetMapping("/catalogs")
     public List<CatalogItem> getCatalog() {
         // get all rating by movie id
-        ResponseEntity<String> result = restTemplate.getForEntity("http://ratings-service/ratings/", String.class);
+        ResponseEntity<String> result = restTemplate.getForEntity(accessor.ratingServiceUrl, String.class);
         RatingList ratings = gson.fromJson(result.getBody(), RatingList.class);
         return ratings.getRatings().stream().map(rating -> {
-            ResponseEntity<String> response = restTemplate.getForEntity("http://movie-service/movies/" + rating.getMovie(), String.class);
+            ResponseEntity<String> response = restTemplate.getForEntity(accessor.movieServiceUrl + rating.getMovie(), String.class);
             Movie movie = gson.fromJson(response.getBody(), Movie.class);
             return new CatalogItem(movie.getId(), movie.getName(), movie.getDescription(), rating.getRating());
         }).collect(Collectors.toList());

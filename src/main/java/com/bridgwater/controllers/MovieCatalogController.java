@@ -2,45 +2,47 @@ package com.bridgwater.controllers;
 
 import com.bridgwater.accessor.Accessor;
 import com.bridgwater.models.CatalogItem;
-import com.bridgwater.models.Movie;
 import com.bridgwater.models.RatingList;
-import com.google.gson.Gson;
+import com.bridgwater.services.MovieInfoService;
+import com.bridgwater.services.RatingInfoService;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@Slf4j
 public class MovieCatalogController {
 
     @Autowired
-    private RestTemplate restTemplate;
+    private MovieInfoService movieInfoService;
     @Autowired
-    private Gson gson;
+    private RatingInfoService ratingInfoService;
     @Autowired
-    Accessor accessor;
+    private Accessor accessor;
 
-    @GetMapping("/catalogs")
-    public List<CatalogItem> getCatalog() {
-        // get all rating by movie id
-        ResponseEntity<String> result = restTemplate.getForEntity(accessor.ratingServiceUrl, String.class);
-        RatingList ratings = gson.fromJson(result.getBody(), RatingList.class);
-        return ratings.getRatings().stream().map(rating -> {
-            ResponseEntity<String> response = restTemplate.getForEntity(accessor.movieServiceUrl + rating.getMovie(), String.class);
-            Movie movie = gson.fromJson(response.getBody(), Movie.class);
-            return new CatalogItem(movie.getId(), movie.getName(), movie.getDescription(), rating.getRating());
-        }).collect(Collectors.toList());
+    @HystrixCommand(fallbackMethod = "getFallBackCatalog",
+            threadPoolKey = "catalogPoolInfo",
+            threadPoolProperties = {
+                    @HystrixProperty(name = "coreSize", value = "20"),
+                    @HystrixProperty(name = "maxQueueSize", value = "10"),
+            }
+    )
+    @GetMapping("/catalogs/{userId}")
+    public List<CatalogItem> getCatalog(@PathVariable String userId) {
+        log.info("get all rating by movie id");
+        RatingList ratings = ratingInfoService.getRatings();
+        return ratings.getRatings().stream().map(movieInfoService::getCatalogItem).collect(Collectors.toList());
     }
 
-    @GetMapping("/catalogs/{movieId}")
-    public CatalogItem getMovie(@PathVariable String movieId) {
-        // get all rating by movie id
-        Movie movie = restTemplate.getForObject(accessor.movieServiceUrl + movieId, Movie.class);
-        return new CatalogItem(movie.getName(), movie.getDescription(), (movie.getRating() != null) ? movie.getRating() : 5);
+    public List<CatalogItem> getFallBackCatalog(@PathVariable String userId) {
+        return Collections.singletonList(new CatalogItem("No Movie available", "Description not available", 0));
     }
 }

@@ -18,6 +18,13 @@ public class Rating implements Serializable {
         super();
     }
 
+    public Rating(Integer id, Integer rating) {
+        super();
+        this.id = id;
+        this.rating = rating;
+    }
+
+
     public Integer getId() {
         return id;
     }

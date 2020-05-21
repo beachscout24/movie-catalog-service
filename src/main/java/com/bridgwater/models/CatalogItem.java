@@ -1,8 +1,11 @@
 package com.bridgwater.models;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ApiModel("Catalog Item Details")
 public class CatalogItem {
 
     public CatalogItem(String name, String description, Integer rating) {
@@ -24,12 +27,13 @@ public class CatalogItem {
         super();
     }
 
+    @ApiModelProperty("The id of the Catalog Item")
     private int id;
-
+    @ApiModelProperty("Name of the Movie")
     private String name;
-
+    @ApiModelProperty("Description of the Movie")
     private String description;
-
+    @ApiModelProperty("Rating of the Movie")
     private int rating;
 
     public int getId() {

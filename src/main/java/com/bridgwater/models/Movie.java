@@ -1,12 +1,19 @@
 package com.bridgwater.models;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ApiModel("Details of a Movie Object")
 public class Movie {
+    @ApiModelProperty("The id of a movie")
     private Integer id;
+    @ApiModelProperty("The name of a movie")
     private String name;
+    @ApiModelProperty("The description of a movie")
     private String description;
+    @ApiModelProperty("The rating of a movie")
     private Integer rating;
 
     public String getDescription() {

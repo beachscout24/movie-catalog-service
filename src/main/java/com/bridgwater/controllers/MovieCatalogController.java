@@ -7,10 +7,12 @@ import com.bridgwater.services.MovieInfoService;
 import com.bridgwater.services.RatingInfoService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
+@RequestMapping("/api")
 public class MovieCatalogController {
 
     @Autowired
@@ -36,6 +39,9 @@ public class MovieCatalogController {
             }
     )
     @GetMapping("/catalogs/{userId}")
+    @ApiOperation(value = "Finds a list of cataloged movies",
+            notes = "Provide an Id to retrieve up a catalog of movies with it;s ratings",
+            response = List.class)
     public List<CatalogItem> getCatalog(@PathVariable String userId) {
         log.info("get all rating by movie id");
         RatingList ratings = ratingInfoService.getRatings();

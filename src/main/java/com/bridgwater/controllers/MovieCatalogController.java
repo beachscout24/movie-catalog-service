@@ -1,6 +1,5 @@
 package com.bridgwater.controllers;
 
-import com.bridgwater.accessor.Accessor;
 import com.bridgwater.models.CatalogItem;
 import com.bridgwater.models.RatingList;
 import com.bridgwater.services.MovieInfoService;
@@ -10,6 +9,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,8 +28,6 @@ public class MovieCatalogController {
     private MovieInfoService movieInfoService;
     @Autowired
     private RatingInfoService ratingInfoService;
-    @Autowired
-    private Accessor accessor;
 
     @HystrixCommand(fallbackMethod = "getFallBackCatalog",
             threadPoolKey = "catalogPoolInfo",
@@ -42,13 +40,13 @@ public class MovieCatalogController {
     @ApiOperation(value = "Finds a list of cataloged movies",
             notes = "Provide an Id to retrieve up a catalog of movies with it;s ratings",
             response = List.class)
-    public List<CatalogItem> getCatalog(@PathVariable String userId) {
+    public ResponseEntity<List<CatalogItem>> getCatalog(@PathVariable String userId) {
         log.info("get all rating by movie id");
         RatingList ratings = ratingInfoService.getRatings();
-        return ratings.getRatings().stream().map(movieInfoService::getCatalogItem).collect(Collectors.toList());
+        return ResponseEntity.ok(ratings.getRatings().stream().map(movieInfoService::getCatalogItem).collect(Collectors.toList()));
     }
 
-    public List<CatalogItem> getFallBackCatalog(@PathVariable String userId) {
-        return Collections.singletonList(new CatalogItem("No Movie available", "Description not available", 0));
+    public ResponseEntity<List<CatalogItem>> getFallBackCatalog(@PathVariable String userId) {
+        return ResponseEntity.ok(Collections.singletonList(new CatalogItem("No Movie available", "Description not available", 0)));
     }
 }
